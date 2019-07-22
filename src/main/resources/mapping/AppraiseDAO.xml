@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.accp.forum.dao.AppraiseDAO">
+  <resultMap id="BaseResultMap" type="com.accp.forum.pojo.Appraise">
+    <id column="appraise_id" jdbcType="INTEGER" property="appraiseId" />
+    <result column="thread_id" jdbcType="INTEGER" property="threadId" />
+    <result column="appraise_author" jdbcType="INTEGER" property="appraiseAuthor" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    appraise_id, thread_id, appraise_author
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from appraise
+    where appraise_id = #{appraiseId,jdbcType=INTEGER}
+  </select>
+  <select id="selectBythreadId" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from appraise
+    where thread_id = #{threadId,jdbcType=INTEGER} and appraise_author = #{appraise_author,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from appraise
+    where appraise_id = #{appraiseId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.accp.forum.pojo.Appraise">
+    insert into appraise (appraise_id, thread_id, appraise_author)
+    values (#{appraiseId,jdbcType=INTEGER}, #{threadId,jdbcType=INTEGER}, #{appraiseAuthor,jdbcType=INTEGER}
+  </insert>
+  <insert id="insertSelective" parameterType="com.accp.forum.pojo.Appraise">
+    insert into appraise
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="appraiseId != null">
+        appraise_id,
+      </if>
+      <if test="threadId != null">
+        thread_id,
+      </if>
+      <if test="appraiseAuthor != null">
+        appraise_author
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="appraiseId != null">
+        #{appraiseId,jdbcType=INTEGER},
+      </if>
+      <if test="threadId != null">
+        #{threadId,jdbcType=INTEGER},
+      </if>
+      <if test="appraiseAuthor != null">
+        #{appraiseAuthor,jdbcType=INTEGER}
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.accp.forum.pojo.Appraise">
+    update appraise
+    <set>
+      <if test="threadId != null">
+        thread_id = #{threadId,jdbcType=INTEGER},
+      </if>
+      <if test="appraiseAuthor != null">
+        appraise_author = #{appraiseAuthor,jdbcType=INTEGER}
+      </if>
+    </set>
+    where appraise_id = #{appraiseId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.accp.forum.pojo.Appraise">
+    update appraise
+    set thread_id = #{threadId,jdbcType=INTEGER},
+      appraise_author = #{appraiseAuthor,jdbcType=INTEGER}
+    where appraise_id = #{appraiseId,jdbcType=INTEGER}
+  </update>
+</mapper>

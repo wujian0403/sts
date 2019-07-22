@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.accp.forum.dao.ReplyDAO">
+  <resultMap id="BaseResultMap" type="com.accp.forum.pojo.Reply">
+    <result column="reply_id" jdbcType="INTEGER" property="replyId" />
+    <result column="reply_author" jdbcType="INTEGER" property="replyAuthor" />
+    <result column="by_reply" jdbcType="INTEGER" property="byReply" />
+    <result column="reply_content" jdbcType="VARCHAR" property="replyContent" />
+    <result column="reply_createtime" jdbcType="TIMESTAMP" property="replyCreatetime" />
+    <result column="reply_type" jdbcType="INTEGER" property="replyType" />
+    <result column="like" jdbcType="INTEGER" property="like" />
+    <result column="trample" jdbcType="INTEGER" property="trample" />
+    <result column="article_id" jdbcType="INTEGER" property="articleId" />
+    <association property="reply" column="by_reply" select="selectByByReply"/>
+  </resultMap>
+  <insert id="insert" parameterType="com.accp.forum.pojo.Reply">
+    insert into reply (reply_id, reply_author, by_reply, 
+      reply_content, reply_createtime, reply_type, 
+      `like`, trample, article_id
+      )
+    values (0, #{replyAuthor,jdbcType=INTEGER}, #{byReply,jdbcType=INTEGER}, 
+      #{replyContent,jdbcType=VARCHAR}, now(), #{articleId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.accp.forum.pojo.Reply">
+    insert into reply
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="replyId != null">
+        reply_id,
+      </if>
+      <if test="replyAuthor != null">
+        reply_author,
+      </if>
+      <if test="byReply != null">
+        by_reply,
+      </if>
+      <if test="replyContent != null">
+        reply_content,
+      </if>
+      <if test="replyCreatetime != null">
+        reply_createtime,
+      </if>
+      <if test="replyType != null">
+        reply_type,
+      </if>
+      <if test="like != null">
+        `like`,
+      </if>
+      <if test="trample != null">
+        trample,
+      </if>
+      <if test="articleId != null">
+        article_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="replyId != null">
+        #{replyId,jdbcType=INTEGER},
+      </if>
+      <if test="replyAuthor != null">
+        #{replyAuthor,jdbcType=INTEGER},
+      </if>
+      <if test="byReply != null">
+        #{byReply,jdbcType=INTEGER},
+      </if>
+      <if test="replyContent != null">
+        #{replyContent,jdbcType=VARCHAR},
+      </if>
+      <if test="replyCreatetime != null">
+        #{replyCreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="replyType != null">
+        #{replyType,jdbcType=INTEGER},
+      </if>
+      <if test="like != null">
+        #{like,jdbcType=INTEGER},
+      </if>
+      <if test="trample != null">
+        #{trample,jdbcType=INTEGER},
+      </if>
+      <if test="articleId != null">
+        #{articleId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.accp.forum.pojo.Reply">
+    update reply
+    <set>
+      <if test="like != null">
+        `like` = `like`+1,
+      </if>
+      <if test="trample != null">
+        trample = `trample`+1,
+      </if>
+    </set>
+    where reply_id = #{replyId,jdbcType=INTEGER}
+  </update>
+  <select id="selectAll" resultMap="BaseResultMap">
+  	select * from reply where article_id = #{id} order by reply_createtime
+  </select>
+  <select id="selectByByReply" resultMap="BaseResultMap">
+  	select * from reply where by_reply = #{0}
+  </select>
+  <select id="select" resultMap="BaseResultMap">
+  	select * from reply
+  </select>
+  <select id="selectThread" resultMap="BaseResultMap">
+  	select * from reply where by_reply = null;
+  </select>
+</mapper>
